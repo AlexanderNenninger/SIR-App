@@ -139,7 +139,7 @@ def update_3d(beta, gamma, S_0, I_0, R_0, aux):
     )
     # Rescale u
     u_norm = np.linalg.norm(u, axis=1)
-    u = (u.T / (u_norm +                                                                                                                                                                                                                                                              u_norm.std())).T
+    u = (u.T / (u_norm + u_norm.std())).T
     # Make figure
     fig = go.Figure(
         data=[
