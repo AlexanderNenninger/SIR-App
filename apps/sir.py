@@ -12,14 +12,14 @@ from application import app
 from collapse import collapse
 from modules.events import event
 from modules.eval_on_grid import eval_on_grid_3d
-
+from description import description
 
 def f_sir(t, y, beta, gamma, mu):
     S = y[0]
     I = y[1]
     R = y[2]
     return np.array([
-        - beta * I * S + mu * (S + I + R) - mu * S,
+        - beta * I * S + mu * (I + R),
         beta * I * S - (gamma + mu) * I,
         gamma * I - mu * R
     ])
@@ -77,28 +77,28 @@ layout = html.Div([
                 dbc.Row([
                     dbc.Col('Beta', width=3),
                     dbc.Col([
-                        dcc.Slider(id='beta', min=0, max=1, step=.01, value=.5),
+                        dcc.Slider(id='beta', min=0, max=1, step=.01, value=.5, marks={0:'0', 1:'1'}),
                     ], width=9),
                 ]),
                 dbc.Row([
                     dbc.Col('Gamma', width=3),
                     dbc.Col([
-                        dcc.Slider(id='gamma', min=0, max=1, step=.01, value=.2),
+                        dcc.Slider(id='gamma', min=0, max=1, step=.01, value=.2, marks={0:'0', 1:'1'}),
                     ], width=9),
                 ]),
                 dbc.Row([
                     dbc.Col('Mu', width=3),
                     dbc.Col([
-                        dcc.Slider(id='mu', min=0, max=.1, step=.0001, value=0.),
+                        dcc.Slider(id='mu', min=0, max=.2, step=.0001, value=0., marks={0:'0', .2:'0.2'}),
                     ], width=9),
                 ]),
             ),
         ],),
-    ],),
+    ]),
     html.Hr(),
     dbc.Row([
         dbc.Col([
-
+            description
         ], width=4),
         dbc.Col([
             dcc.Graph(id='3d-path', style={'height': '90vh'}),
