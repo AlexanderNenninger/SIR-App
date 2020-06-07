@@ -9,9 +9,9 @@ from scipy.integrate import solve_ivp
 import numpy as np
 
 from application import app
-from nav import navbar
 from collapse import collapse
 from modules.events import event
+from modules.eval_on_grid import eval_on_grid_3d
 
 stop_when_over = event(lambda t, y, beta, gamma: y[1] - .005, terminal=True, direction=-1)
 
@@ -116,24 +116,55 @@ def update_3d(beta, gamma, S_0, I_0, R_0, aux):
     '''Updates the 3d Plot'''
     # Test values
     T = 1000
-    #
+    # Handle None Case
     S_0 = S_0 or 100
     I_0 = I_0 or 1
     R_0 = R_0 or 0
     N = S_0 + I_0 + R_0
+    
+    # Data for trajectory
     t, y = SIR(S_0, I_0, R_0, beta, gamma, T)
     
-    fig = go.Figure(data=[go.Scatter3d(
-        x=y[0],
-        y=y[1],
-        z=y[2],
-        mode='lines+markers',
-        marker=dict(
-            color=t,
-            colorscale='Viridis',
-            size=2,
-        ),
-    )])
+    # Data for Cone Plot
+    x, u = eval_on_grid_3d(
+        func=f_sir,
+        x_min=np.zeros(3),
+        x_max=N*np.ones(3),
+        t=0,
+        n_points=10,
+        beta=beta,
+        gamma=gamma,
+    )
+
+    fig = go.Figure(
+        data=[
+            go.Scatter3d(
+                name='Sample Trajectory',
+                x=y[0],
+                y=y[1],
+                z=y[2],
+                mode='lines+markers',
+                marker=dict(
+                    color=t,
+                    colorscale='Viridis',
+                    size=2,
+                ),  
+            ),
+            go.Cone(
+                name='Vector Field',
+                opacity=.6,
+                x=x[:, 0],
+                y=x[:, 1],
+                z=x[:, 2],
+                u=u[:, 0],
+                v=u[:, 1],
+                w=u[:, 2],
+                colorscale='Viridis',
+                showscale=False,
+                sizemode='absolute',
+            )
+        ]
+    )
 
     fig.update_layout(
         margin=dict(l=0, r=0, b=0, t=0),
@@ -169,7 +200,6 @@ def update_timeseries(beta, gamma, S_0, I_0, R_0, aux):
     S_0 = S_0 or 100
     I_0 = I_0 or 1
     R_0 = R_0 or 0
-    N = S_0 + I_0 + R_0
     t, y = SIR(S_0, I_0, R_0, beta, gamma, T)
 
     fig = go.Figure(
