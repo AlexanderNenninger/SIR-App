@@ -60,6 +60,7 @@ def SIR(S_0: float, I_0: float, R_0: float, beta: float,
 
 
 layout = html.Div([
+    html.Hr(),
     dbc.Row([
         dbc.Col([
             dbc.Input(id='inp-S0', type='number', step=1, placeholder='Initial Susceptible')
@@ -87,6 +88,7 @@ layout = html.Div([
             ),
         ],),
     ],),
+    html.Hr(),
     dbc.Row([
         dbc.Col([
             dcc.Graph(id='3d-path'),
