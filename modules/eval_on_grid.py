@@ -12,3 +12,4 @@ def eval_on_grid_3d(func: callable, x_min: np.ndarray, x_max: np.ndarray, t: flo
     u = np.array(f_map)
 
     return xx, u
+ 

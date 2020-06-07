@@ -13,21 +13,23 @@ from collapse import collapse
 from modules.events import event
 from modules.eval_on_grid import eval_on_grid_3d
 
-stop_when_over = event(lambda t, y, beta, gamma: y[1] - .005, terminal=True, direction=-1)
 
-
-def f_sir(t, y, beta, gamma):
+def f_sir(t, y, beta, gamma, mu):
     S = y[0]
     I = y[1]
+    R = y[2]
     return np.array([
-        - beta * I * S,
-        beta * I * S - gamma * I,
-        gamma * I
+        - beta * I * S + mu * (S + I + R) - mu * S,
+        beta * I * S - (gamma + mu) * I,
+        gamma * I - mu * R
     ])
 
 
+stop_when_over = event(lambda t, y, beta, gamma, mu: np.linalg.norm(f_sir(t, y, beta, gamma, mu)) - .0001, terminal=True, direction=-1)
+
+
 def SIR(S_0: float, I_0: float, R_0: float, beta: float,
-        gamma: float,  T: float) -> np.ndarray:
+        gamma: float, mu: float,  T: float) -> np.ndarray:
     """Computes Solution to SIR Model from t=0 to T
     S_0, I_0, R_0 <float>: initial values
     beta<float>: Infection Rate * Interaction Rate
@@ -50,17 +52,16 @@ def SIR(S_0: float, I_0: float, R_0: float, beta: float,
         y0=y0,
         method='Radau',
         t_eval=t_eval,
-        args=(beta, gamma),
+        args=(beta, gamma, mu),
         events=[stop_when_over]
     )
     if sol.success:
         return sol.t, sol.y * N
     else:
-        return np.array([0]), y0 * N
+        return np.array([0]), np.array([y0 * N])
 
 
 layout = html.Div([
-    html.Hr(),
     dbc.Row([
         dbc.Col([
             dbc.Input(id='inp-S0', type='number', step=1, placeholder='Initial Susceptible')
@@ -84,20 +85,29 @@ layout = html.Div([
                     dbc.Col([
                         dcc.Slider(id='gamma', min=0, max=1, step=.01, value=.2),
                     ], width=9),
-                ])
+                ]),
+                dbc.Row([
+                    dbc.Col('Mu', width=3),
+                    dbc.Col([
+                        dcc.Slider(id='mu', min=0, max=.1, step=.0001, value=0.),
+                    ], width=9),
+                ]),
             ),
         ],),
     ],),
     html.Hr(),
     dbc.Row([
         dbc.Col([
-            dcc.Graph(id='time-series-graph'),
-        ], width=12),
+
+        ], width=4),
+        dbc.Col([
+            dcc.Graph(id='3d-path', style={'height': '90vh'}),
+        ], width=8),
     ]),
     dbc.Row([
         dbc.Col([
-            dcc.Graph(id='3d-path', style={'height': '95vh'}),
-        ], width=8),
+            dcc.Graph(id='time-series-graph'),
+        ], width=12),
     ]),
     html.Div(id='dummy-div'),
 ], className='sir')
@@ -108,13 +118,14 @@ layout = html.Div([
     [
         Input('beta', 'value'),
         Input('gamma', 'value'),
+        Input('mu', 'value'),
         Input('inp-S0', 'value'),
         Input('inp-I0', 'value'),
         Input('inp-R0', 'value'),
         Input('dummy-div', 'children')  
     ],
 )
-def update_3d(beta, gamma, S_0, I_0, R_0, aux):
+def update_3d(beta, gamma, mu, S_0, I_0, R_0, aux):
     '''Updates the 3d Plot'''
     # Test values
     T = 1000
@@ -125,7 +136,7 @@ def update_3d(beta, gamma, S_0, I_0, R_0, aux):
     N = S_0 + I_0 + R_0
     
     # Data for trajectory
-    t, y = SIR(S_0, I_0, R_0, beta, gamma, T)
+    t, y = SIR(S_0, I_0, R_0, beta, gamma, mu, T)
     
     # Data for Cone Plot
     x, u = eval_on_grid_3d(
@@ -136,10 +147,11 @@ def update_3d(beta, gamma, S_0, I_0, R_0, aux):
         n_points=10,
         beta=beta,
         gamma=gamma,
+        mu=mu,
     )
     # Rescale u
     u_norm = np.linalg.norm(u, axis=1)
-    u = (u.T / (u_norm + u_norm.std())).T
+    u = (u.T / u_norm.clip(.01)).T
     # Make figure
     fig = go.Figure(
         data=[
@@ -172,7 +184,7 @@ def update_3d(beta, gamma, S_0, I_0, R_0, aux):
                 u=u[:, 0],
                 v=u[:, 1],
                 w=u[:, 2],
-                colorscale='Inferno',
+                autocolorscale=True,
                 showscale=False,
                 sizemode='absolute',
             )
@@ -191,6 +203,7 @@ def update_3d(beta, gamma, S_0, I_0, R_0, aux):
             yaxis=dict(range=[0, N]),
             zaxis=dict(range=[0, N]),
         ),
+        legend=dict(x=0, y=1),
     )
     return fig
 
@@ -200,20 +213,21 @@ def update_3d(beta, gamma, S_0, I_0, R_0, aux):
     [
         Input('beta', 'value'),
         Input('gamma', 'value'),
+        Input('mu', 'value'),
         Input('inp-S0', 'value'),
         Input('inp-I0', 'value'),
         Input('inp-R0', 'value'),
         Input('dummy-div', 'children')  
     ],
 )
-def update_timeseries(beta, gamma, S_0, I_0, R_0, aux):
+def update_timeseries(beta, gamma, mu, S_0, I_0, R_0, aux):
     '''Updates the Time Series'''
-    T = 1000
+    T = 1000                                                                                                                                         
     #
     S_0 = S_0 or 100
     I_0 = I_0 or 1
     R_0 = R_0 or 0
-    t, y = SIR(S_0, I_0, R_0, beta, gamma, T)
+    t, y = SIR(S_0, I_0, R_0, beta, gamma, mu, T)
 
     fig = go.Figure(
         data=[
@@ -224,5 +238,6 @@ def update_timeseries(beta, gamma, S_0, I_0, R_0, aux):
     )
     fig.update_layout(
         margin=dict(l=0, r=0, b=0, t=0),
+        legend=dict(x=0, y=1),
     )
     return fig
