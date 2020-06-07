@@ -91,13 +91,15 @@ layout = html.Div([
     html.Hr(),
     dbc.Row([
         dbc.Col([
-            dcc.Graph(id='3d-path'),
-        ], width=4),
-        dbc.Col([
             dcc.Graph(id='time-series-graph'),
+        ], width=12),
+    ]),
+    dbc.Row([
+        dbc.Col([
+            dcc.Graph(id='3d-path', style={'height': '95vh'}),
         ], width=8),
     ]),
-    html.Div(id='dummy-div')
+    html.Div(id='dummy-div'),
 ], className='sir')
 
 
@@ -135,9 +137,20 @@ def update_3d(beta, gamma, S_0, I_0, R_0, aux):
         beta=beta,
         gamma=gamma,
     )
-
+    # Rescale u
+    u_norm = np.linalg.norm(u, axis=1)
+    u = (u.T / (u_norm +                                                                                                                                                                                                                                                              u_norm.std())).T
+    # Make figure
     fig = go.Figure(
         data=[
+            go.Scatter3d(
+                name='Intial Conditions',
+                x=[S_0],
+                y=[I_0],
+                z=[R_0],
+                mode='markers',
+                marker=dict(size=10),
+            ),
             go.Scatter3d(
                 name='Sample Trajectory',
                 x=y[0],
@@ -159,7 +172,7 @@ def update_3d(beta, gamma, S_0, I_0, R_0, aux):
                 u=u[:, 0],
                 v=u[:, 1],
                 w=u[:, 2],
-                colorscale='Viridis',
+                colorscale='Inferno',
                 showscale=False,
                 sizemode='absolute',
             )
