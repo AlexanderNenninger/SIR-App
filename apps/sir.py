@@ -12,7 +12,7 @@ from application import app
 from collapse import collapse
 from modules.events import event
 from modules.eval_on_grid import eval_on_grid_3d
-from description import description
+from description import description_SIR
 
 def f_sir(t, y, beta, gamma, mu):
     S = y[0]
@@ -98,7 +98,7 @@ layout = html.Div([
     html.Hr(),
     dbc.Row([
         dbc.Col([
-            description
+            description_SIR
         ], width=4),
         dbc.Col([
             dcc.Graph(id='3d-path', style={'height': '90vh'}),
