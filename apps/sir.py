@@ -99,10 +99,10 @@ layout = html.Div([
     dbc.Row([
         dbc.Col([
             description_SIR
-        ], width=4),
+        ], width=6),
         dbc.Col([
-            dcc.Graph(id='3d-path', style={'height': '90vh'}),
-        ], width=8),
+            dcc.Graph(id='3d-path', style={'height': '80vh'}),
+        ], width=6),
     ]),
     dbc.Row([
         dbc.Col([
@@ -149,9 +149,6 @@ def update_3d(beta, gamma, mu, S_0, I_0, R_0, aux):
         gamma=gamma,
         mu=mu,
     )
-    # Rescale u
-    u_norm = np.linalg.norm(u, axis=1)
-    u = (u.T / u_norm.clip(.01)).T
     # Make figure
     fig = go.Figure(
         data=[

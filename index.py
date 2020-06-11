@@ -4,7 +4,8 @@ from dash.dependencies import Input, Output
 
 from application import app, application
 
-from apps import sir, sis
+from apps import sir
+from apps import sis
 from nav import navbar
 
 app.layout = html.Div([
