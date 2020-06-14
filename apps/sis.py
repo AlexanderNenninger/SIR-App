@@ -22,7 +22,7 @@ def f_sis(t, y, beta, gamma, delta, sigma, epsilon, p):
     I = y[1]
     N = S + I
     return np.array([
-        - beta * S * I / N + gamma * I + delta * (1 - p * I / N) * N - sigma * S,
+        - beta * S * I / N + gamma * I + delta * N - p * delta * I - sigma * S,
         beta * S * I / N - gamma * I + p * delta * I - (sigma + epsilon) * I
     ])
 

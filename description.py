@@ -27,7 +27,7 @@ description_SIS = html.Div([
     html.P(
         children=r"""
 \begin{align}
-    \dot{S} &= - \beta \frac{SI}{N} + \gamma I + (\delta - p \delta)N - \sigma S\\
+    \dot{S} &= - \beta \frac{SI}{N} + \gamma I + \delta N - p \delta I - \sigma S\\
     \dot{I} &= \beta  \frac{SI}{N} - \gamma I + p \delta I - (\sigma + \epsilon) I
 \end{align}
     """),
