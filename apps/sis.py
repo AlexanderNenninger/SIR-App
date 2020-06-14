@@ -21,14 +21,11 @@ def f_sis(t, y, beta, gamma, delta, sigma, epsilon, p):
     S = y[0]
     I = y[1]
     N = S + I
-    # return np.array([
-    #     gamma - beta * S * I - p * gamma * I + delta * I  - sigma * S,
-    #     beta * S * I - (delta + sigma + epsilon - p * gamma) * I 
-    # ])
     return np.array([
-        - beta * S * I / N + gamma * I + (delta - p * delta)* N - sigma * S,
-        beta * S * I / N - gamma * I  + p * delta * I - (sigma + epsilon) * I
+        - beta * S * I / N + gamma * I + delta * (1 - p * I / N) * N - sigma * S,
+        beta * S * I / N - gamma * I + p * delta * I - (sigma + epsilon) * I
     ])
+
 
 # Stop at equilibrium
 stop_when_over = event(
@@ -119,7 +116,7 @@ layout = html.Div([
                     dbc.Col([
                         dcc.Slider(id='p', min=0, max=1, step=.01, value=0.01, marks={0:'0', 1:'1'}),
                     ], width=9),
-                ]),                                                
+                ]),
             ),
         ],),
     ]),
@@ -180,7 +177,7 @@ def update_2d_sis(beta, gamma, delta, sigma, epsilon, p, S_0, I_0, aux):
     # Handle None Case
     S_0 = S_0 or 80
     I_0 = I_0 or 20
-  
+
     # Data for trajectory
     t, y = SIS(S_0, I_0, beta, gamma, delta, sigma, epsilon, p, T)
 
@@ -202,10 +199,10 @@ def update_2d_sis(beta, gamma, delta, sigma, epsilon, p, S_0, I_0, aux):
         p=p
     )
     fig = ff.create_quiver(
-        x=xx[:,0],
-        y=xx[:,1],
-        u=uu[:,0],
-        v=uu[:,1],
+        x=xx[:, 0],
+        y=xx[:, 1],
+        u=uu[:, 0],
+        v=uu[:, 1],
         name='Vector Field',
         scale=.4,
     )
