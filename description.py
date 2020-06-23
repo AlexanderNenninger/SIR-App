@@ -12,7 +12,7 @@ description_SIR = html.Div([
     \dot{R} &= \gamma I - \mu R
 \end{align}
     """),
-    html.P(r"""where S denotes the number of susceptible, I the number of infected and R the number of removed individuals."""),
+    html.P(r"""where $S$ denotes the number of susceptible, $I$ the number of infected and $R$ the number of removed individuals."""),
     html.P("Parameters:"),
     html.Ul([
         html.Li(r"Infection rate $\beta$"),
@@ -31,7 +31,7 @@ description_SIS = html.Div([
     \dot{I} &= \beta  \frac{SI}{N} - \gamma I + p \delta I - (\sigma + \epsilon) I
 \end{align}
     """),
-    html.P(r"""where S denotes the number of susceptible and I the number of infected people. The SIS model can be used to model diseases, where recovered individuals do not aquire immunity from the disease, e.g. Gonorrhea."""),
+    html.P(r"""where $S$ denotes the number of susceptible and $I$ the number of infected people and $N=S+I$ the population size. The SIS model can be used to model diseases, where recovered individuals do not aquire immunity from the disease, e.g. Gonorrhea."""),
     html.P("Parameters:"),
     html.Ul([
         html.Li(r"Infection rate $\beta$"),
