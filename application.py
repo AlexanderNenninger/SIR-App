@@ -2,15 +2,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 
-import dash_core_components as dcc
-import dash_html_components as html
-from dash.dependencies import Input, Output
-
 from app import application, app
-
-from apps import sir
-from apps import sis
-from nav import navbar
 
 from apps import sir
 from apps import sis
