@@ -175,9 +175,8 @@ def update_2d_sis(beta, gamma, delta, sigma, epsilon, p, S_0, I_0, aux):
     # Test values
     T = 200
     # Handle None Case
-    S_0 = S_0 or 80
-    I_0 = I_0 or 20
-
+    if S_0 is None: S_0 = 80
+    if I_0 is None: I_0 = 20
     # Data for trajectory
     t, y = SIS(S_0, I_0, beta, gamma, delta, sigma, epsilon, p, T)
 
@@ -262,9 +261,9 @@ def update_2d_sis(beta, gamma, delta, sigma, epsilon, p, S_0, I_0, aux):
 def update_timeseries_sis(beta, gamma, delta, sigma, epsilon, p, S_0, I_0, aux):
     '''Updates the Time Series'''
     T = 200
-    #
-    S_0 = S_0 or 80
-    I_0 = I_0 or 20
+    # Check for none input
+    if S_0 is None: S_0 = 80
+    if I_0 is None: I_0 = 20
     t, y = SIS(S_0, I_0, beta, gamma, delta, sigma, epsilon, p, T)
 
     fig = go.Figure(

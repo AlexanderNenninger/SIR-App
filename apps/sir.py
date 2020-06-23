@@ -130,9 +130,9 @@ def update_3d(beta, gamma, mu, S_0, I_0, R_0, aux):
     # Test values
     T = 1000
     # Handle None Case
-    S_0 = S_0 or 100
-    I_0 = I_0 or 1
-    R_0 = R_0 or 0
+    if S_0 is None: S_0 = 80
+    if I_0 is None: I_0 = 20
+    if R_0 is None: R_0 = 20
     N = S_0 + I_0 + R_0
     
     # Data for trajectory
@@ -221,9 +221,9 @@ def update_timeseries(beta, gamma, mu, S_0, I_0, R_0, aux):
     '''Updates the Time Series'''
     T = 1000                                                                                                                                         
     #
-    S_0 = S_0 or 100
-    I_0 = I_0 or 1
-    R_0 = R_0 or 0
+    if S_0 is None: S_0 = 80
+    if I_0 is None: I_0 = 20
+    if R_0 is None: R_0 = 20
     t, y = SIR(S_0, I_0, R_0, beta, gamma, mu, T)
 
     fig = go.Figure(
