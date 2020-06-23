@@ -10,4 +10,4 @@ app = dash.Dash(
     suppress_callback_exceptions=True
 )
 application = app.server
-app.title = "Disease Models"
+app.title = "Compartmental Disease Models"
