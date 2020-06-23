@@ -1,3 +1,6 @@
+import flask
+import os
+
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
@@ -7,6 +10,8 @@ from app import application, app
 from apps import sir
 from apps import sis
 from nav import navbar
+
+STATIC_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
 
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
@@ -29,6 +34,9 @@ def display_page(pathname):
     else:
         return '404'
 
+@app.server.route('/static/<resource>')
+def serve_static(resource):
+    return flask.send_from_directory(STATIC_PATH, resource)
 
 if __name__ == "__main__":
     application.run(host="0.0.0.0", port=8000)

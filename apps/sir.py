@@ -110,6 +110,17 @@ layout = html.Div([
             dcc.Graph(id='time-series-graph'),
         ], width=12),
     ]),
+    html.Hr(),
+    dbc.Row([
+        dbc.Col([
+            html.H3("Lyapunov function of the SIR-Model")
+        ], width=12),
+    ]),
+    dbc.Row([
+        dbc.Col([
+            html.Embed(type="text/html", src="/static/sir_lyapunov.html", width="900", height="600"),
+        ], width=12),
+    ]),
     html.Div(id='dummy-div'),
 ], className='sir')
 
