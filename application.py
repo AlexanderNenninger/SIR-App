@@ -1,13 +1,42 @@
-import dash
-from dash_bootstrap_components.themes import BOOTSTRAP
+import dash_core_components as dcc
+import dash_html_components as html
+from dash.dependencies import Input, Output
 
-mathjax = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML'
+import dash_core_components as dcc
+import dash_html_components as html
+from dash.dependencies import Input, Output
 
-app = dash.Dash(
-    __name__,
-    external_stylesheets=[BOOTSTRAP],
-    external_scripts=[mathjax],
-    suppress_callback_exceptions=True
+from app import application, app
+
+from apps import sir
+from apps import sis
+from nav import navbar
+
+from apps import sir
+from apps import sis
+from nav import navbar
+
+app.layout = html.Div([
+    dcc.Location(id='url', refresh=False),
+    navbar(),
+    html.Div(id='page-content', style={'margin': '5px'}),
+])
+
+
+@app.callback(
+    Output('page-content', 'children'),
+    [Input('url', 'pathname'), ]
 )
-application = app.server
-app.title = "Disease Models"
+def display_page(pathname):
+    if pathname in ['/', '']:
+        return sir.layout
+    elif pathname in ['/sir', '/sir/']:
+        return sir.layout
+    elif pathname in ['/sis', '/sis/']:
+        return sis.layout
+    else:
+        return '404'
+
+
+if __name__ == "__main__":
+    application.run(host='0.0.0.0', port=8080)

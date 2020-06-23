@@ -9,7 +9,7 @@ import plotly.figure_factory as ff
 from scipy.integrate import solve_ivp
 import numpy as np
 
-from application import app
+from app import app
 from collapse import collapse
 from modules.events import event
 from modules.eval_on_grid import eval_on_grid_2d

@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 from scipy.integrate import solve_ivp
 import numpy as np
 
-from application import app
+from app import app
 from collapse import collapse
 from modules.events import event
 from modules.eval_on_grid import eval_on_grid_3d
