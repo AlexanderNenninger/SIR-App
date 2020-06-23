@@ -14,6 +14,7 @@ from modules.events import event
 from modules.eval_on_grid import eval_on_grid_3d
 from description import description_SIR
 
+
 def f_sir(t, y, beta, gamma, mu):
     S = y[0]
     I = y[1]
@@ -134,10 +135,10 @@ def update_3d(beta, gamma, mu, S_0, I_0, R_0, aux):
     if I_0 is None: I_0 = 20
     if R_0 is None: R_0 = 20
     N = S_0 + I_0 + R_0
-    
+
     # Data for trajectory
     t, y = SIR(S_0, I_0, R_0, beta, gamma, mu, T)
-    
+
     # Data for Cone Plot
     x, u = eval_on_grid_3d(
         func=f_sir,
@@ -219,7 +220,7 @@ def update_3d(beta, gamma, mu, S_0, I_0, R_0, aux):
 )
 def update_timeseries(beta, gamma, mu, S_0, I_0, R_0, aux):
     '''Updates the Time Series'''
-    T = 1000                                                                                                                                         
+    T = 1000
     #
     if S_0 is None: S_0 = 80
     if I_0 is None: I_0 = 20
