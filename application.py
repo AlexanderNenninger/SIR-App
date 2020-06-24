@@ -16,8 +16,10 @@ STATIC_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     navbar(),
-    html.Div(id='page-content', style={'margin': '5px'}),
-])
+    html.Div([
+        html.Div(id='page-content', style={'margin': '5px', "width": "80vw"}),
+    ], className="d-flex justify-content-center")
+],)
 
 
 @app.callback(
@@ -39,4 +41,4 @@ def serve_static(resource):
     return flask.send_from_directory(STATIC_PATH, resource)
 
 if __name__ == "__main__":
-    application.run(host="0.0.0.0", port=8000)
+    application.run(host="0.0.0.0", port=8000, debug=True)

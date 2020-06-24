@@ -201,7 +201,7 @@ def update_3d(beta, gamma, mu, S_0, I_0, R_0, aux):
     )
 
     fig.update_layout(
-        margin=dict(l=0, r=0, b=0, t=0),
+        margin=dict(l=0, r=0, b=0, t=0, pad=10),
         scene=dict(
             aspectratio=dict(x=1, y=1, z=1),
             xaxis_title='Susceptible',
@@ -246,7 +246,7 @@ def update_timeseries(beta, gamma, mu, S_0, I_0, R_0, aux):
         ]
     )
     fig.update_layout(
-        margin=dict(l=0, r=0, b=0, t=0),
+        margin=dict(l=0, r=0, b=0, t=0, pad=10),
         legend=dict(x=0, y=1),
     )
     return fig
